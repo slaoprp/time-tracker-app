@@ -1,6 +1,15 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-
+  <div>
+    <h1>Nom de la tâche {{ taskName }}</h1>
+    <p>Tâche en cours</p>
+    <div>
+      <span v-if="isTaskInProgress">oui</span>
+      <span v-if="!isTaskInProgress">non</span>
+    </div>
+    <input type="text" v-model="taskName">
+    <button @click="startTask">Start</button>
+    <button @click="stopTask">Stop</button>
+  </div>
 </template>
 
 <script>
@@ -37,16 +46,22 @@ export default {
         return
       }
       this.tasks.push({
+        id: this.getId(),
         name: this.taskName,
         start: this.startTime,
         end: Date.now()
       })
       this.isTaskInProgress = false
       this.errorMsg = null
+      this.taskName = ''
     },
     getId() {
       this.taskID++
       return this.taskID
+    },
+    formatTimeStamp(ts) {
+      let formatter = Intl.DateTimeFormat('fr', { hour: '2-digit', minute: '2-digit' })
+      return formatter.format(ts)
     }
   }
 }
